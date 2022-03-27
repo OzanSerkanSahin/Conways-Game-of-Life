@@ -148,7 +148,7 @@ else:
         ((int(c1[0] / 2)), int(c1[1] / 2)), (int((c2[0] / 2)), int(c2[1] / 2))
     )
 
-run_n(args.get("turns", 300), state)
+run_n(int(args.get("turns", 300)), state)
 
 # A small project I made
 # https://github.com/OzanSerkanSahin
