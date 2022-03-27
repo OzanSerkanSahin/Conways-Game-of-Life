@@ -8,6 +8,9 @@ import pickle
 import sys
 
 
+# Game of Life begins here
+
+
 def cell_state_current(state, cell):
     s = {cell}
     return s.issubset(state)
@@ -48,6 +51,11 @@ def state_next(state_prev):
         if cell_state_next(state_prev, cell):
             state_next.add(cell)
     return state_next
+
+
+# Core of The Game of Life ends here
+
+# Printing and misc functions
 
 
 def state_random(corner1, corner2):
@@ -101,17 +109,6 @@ def clearConsole():
     os.system(command)
 
 
-start = {(0, 0), (1, 1), (1, 0)}
-glider = {(0, 0), (1, 0), (2, 0), (2, 1), (1, 2)}
-state_next(start)
-
-
-def run_and_print(state):
-    state = state_next(state)
-    state_print(state, (0, 0), (15, -15))
-    return state
-
-
 def terminal_cords():
     size = os.get_terminal_size()
     h = size.lines - 1
@@ -131,17 +128,28 @@ def run_n(n, start):
         time.sleep(0.1)
 
 
+# Functions end here, and the part that runs them start.
+
 (c1, c2) = terminal_cords()
 
-if len(sys.argv[1:]) == 0:
-    run_n(
-        300,
-        state_random(
-            ((int(c1[0] / 2)), int(c1[1] / 2)), (int((c2[0] / 2)), int(c2[1] / 2))
-        ),
+args = {}
+for i in range(1, len(sys.argv)):
+    if sys.argv[i] == "-f":
+        args["file"] = sys.argv[i + 1]
+    elif sys.argv[i] == "-t":
+        args["turns"] = sys.argv[i + 1]
+
+# If no file is provided, create a random state half the length and width of the initial terminal
+state = set()
+if "file" in args:
+    state = pickle.load(open(args["file"], "rb"))
+else:
+    state = state_random(
+        ((int(c1[0] / 2)), int(c1[1] / 2)), (int((c2[0] / 2)), int(c2[1] / 2))
     )
 
+run_n(args.get("turns", 300), state)
 
-# A small project i made
+# A small project I made
 # https://github.com/OzanSerkanSahin
 # https://www.linkedin.com/in/ozan-serkan-sahin/
